@@ -31,7 +31,7 @@ func TestLoadSettings_FileExists(t *testing.T) {
 		t.Fatalf("Failed to marshal test settings: %v", err)
 	}
 
-	err = os.WriteFile(settingsPath, data, 0644)
+	err = os.WriteFile(settingsPath, data, 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test settings file: %v", err)
 	}
@@ -69,7 +69,7 @@ func TestParseAndReplace_JSON(t *testing.T) {
 		t.Fatalf("Failed to marshal test JSON: %v", err)
 	}
 
-	err = os.WriteFile(jsonFile, data, 0644)
+	err = os.WriteFile(jsonFile, data, 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test JSON file: %v", err)
 	}

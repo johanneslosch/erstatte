@@ -33,7 +33,7 @@ func BenchmarkParseAndReplace_JSON(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		// Reset file content for each iteration
-		err := os.WriteFile(jsonFile, []byte(content), 0644)
+		err := os.WriteFile(jsonFile, []byte(content), 0600)
 		if err != nil {
 			b.Fatalf("Failed to reset file content: %v", err)
 		}
@@ -68,7 +68,7 @@ func BenchmarkParseAndReplace_TypeScript(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		// Reset file content for each iteration
-		err := os.WriteFile(tsFile, []byte(content), 0644)
+		err := os.WriteFile(tsFile, []byte(content), 0600)
 		if err != nil {
 			b.Fatalf("Failed to reset file content: %v", err)
 		}
