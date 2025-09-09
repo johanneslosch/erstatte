@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	// Process each BooleanSetting with the parser
 	for _, s := range settingsData.Boolean {
 		replacements := map[string]string{s.Field: s.Value}

@@ -48,11 +48,14 @@ go build -o erstatte ./
 
 ### Basic Usage
 
-1. Create a `settings.json` file (see [Configuration](#configuration))
+1. Create a `settings.json` file (see [Configuration](#configuration) or check `examples/` directory)
 2. Run the tool:
 
 ```bash
 ./erstatte
+
+# Or specify a custom settings file
+./erstatte --settings examples/example-settings.json
 ```
 
 The tool will:
@@ -162,9 +165,12 @@ erstatte/
 │   │   └── parser/
 │   ├── integration/              # Integration tests
 │   └── benchmarks/               # Performance tests
+├── examples/                     # Example files and configurations
+│   ├── example-settings.json     # Example configuration
+│   ├── testfile.ts              # Example TypeScript file
+│   └── README.md                # Examples documentation
 ├── .github/workflows/            # GitHub Actions CI/CD
 ├── main.go                       # Main application
-├── settings.json                 # Configuration file
 └── build-simple.ps1             # Build script for Windows
 ```
 

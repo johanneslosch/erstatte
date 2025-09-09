@@ -24,7 +24,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
 
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -52,15 +52,17 @@ jobs:
         run: go tool cover -html=coverage.out -o coverage.html
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
+        if: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v4
         with:
           file: ./coverage.out
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload coverage artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report-go-${{ matrix.go-version }}
           path: |
@@ -81,7 +83,7 @@ jobs:
           go-version: "1.23"
 
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -97,7 +99,7 @@ jobs:
         run: go test -bench=. -benchmem ./tests/benchmarks/... > benchmark_results.txt
 
       - name: Upload benchmark results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark-results
           path: benchmark_results.txt
@@ -125,7 +127,7 @@ jobs:
           go-version: "1.23"
 
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -150,7 +152,7 @@ jobs:
           fi
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: erstatte-${{ matrix.goos }}-${{ matrix.goarch }}
           path: dist/
