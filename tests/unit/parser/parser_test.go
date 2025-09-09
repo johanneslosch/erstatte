@@ -27,7 +27,7 @@ func TestParseAndReplace_JSON(t *testing.T) {
 		t.Fatalf("Failed to marshal test JSON: %v", err)
 	}
 
-	err = os.WriteFile(jsonFile, data, 0644)
+	err = os.WriteFile(jsonFile, data, 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test JSON file: %v", err)
 	}
@@ -73,7 +73,7 @@ func TestParseAndReplace_TypeScript(t *testing.T) {
   enableFeature: true,
 };`
 
-	err := os.WriteFile(tsFile, []byte(content), 0644)
+	err := os.WriteFile(tsFile, []byte(content), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test TypeScript file: %v", err)
 	}
@@ -119,7 +119,7 @@ func TestParseAndReplace_UnsupportedFileType(t *testing.T) {
 	txtFile := filepath.Join(tempDir, "test.txt")
 
 	// Create test file with unsupported extension
-	err := os.WriteFile(txtFile, []byte("some content"), 0644)
+	err := os.WriteFile(txtFile, []byte("some content"), 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test txt file: %v", err)
 	}

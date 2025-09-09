@@ -22,7 +22,7 @@ func TestEndToEndWorkflow(t *testing.T) {
   maxRetries: 3
 };`
 
-	err := os.WriteFile(testTSFile, []byte(tsContent), 0644)
+	err := os.WriteFile(testTSFile, []byte(tsContent), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create test TypeScript file: %v", err)
 	}
@@ -63,9 +63,8 @@ func TestEndToEndWorkflow(t *testing.T) {
 	// Apply each setting
 	for _, s := range loadedSettings.Boolean {
 		replacements := map[string]string{s.Field: s.Value}
-		err := parser.ParseAndReplace(s.FilePath, replacements)
-		if err != nil {
-			t.Errorf("Failed to apply setting %s: %v", s.Field, err)
+		if parseErr := parser.ParseAndReplace(s.FilePath, replacements); parseErr != nil {
+			t.Errorf("Failed to apply setting %s: %v", s.Field, parseErr)
 		}
 	}
 
@@ -108,7 +107,7 @@ func TestComplexScenario(t *testing.T) {
   "debug": false,
   "port": 8080
 }`
-	err := os.WriteFile(jsonFile, []byte(jsonContent), 0644)
+	err := os.WriteFile(jsonFile, []byte(jsonContent), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create JSON file: %v", err)
 	}
@@ -118,7 +117,7 @@ func TestComplexScenario(t *testing.T) {
   production: false,
   apiUrl: "localhost"
 };`
-	err = os.WriteFile(tsFile, []byte(tsContent), 0644)
+	err = os.WriteFile(tsFile, []byte(tsContent), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create TypeScript file: %v", err)
 	}
@@ -126,7 +125,7 @@ func TestComplexScenario(t *testing.T) {
 	// Properties file
 	propsContent := `environment=development
 server.host=localhost`
-	err = os.WriteFile(propsFile, []byte(propsContent), 0644)
+	err = os.WriteFile(propsFile, []byte(propsContent), 0600)
 	if err != nil {
 		t.Fatalf("Failed to create properties file: %v", err)
 	}

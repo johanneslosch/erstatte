@@ -31,7 +31,7 @@ func ParseAndReplace(filePath string, replacements map[string]string) error {
 		if err != nil {
 			return err
 		}
-		return os.WriteFile(filePath, newContent, 0644)
+		return os.WriteFile(filePath, newContent, 0600)
 
 	case ".properties":
 		lines := strings.Split(data, "\n")
@@ -47,7 +47,7 @@ func ParseAndReplace(filePath string, replacements map[string]string) error {
 				}
 			}
 		}
-		return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0644)
+		return os.WriteFile(filePath, []byte(strings.Join(lines, "\n")), 0600)
 
 	case ".ts":
 		for k, v := range replacements {
@@ -59,7 +59,7 @@ func ParseAndReplace(filePath string, replacements map[string]string) error {
 			}
 			data = re.ReplaceAllString(data, k+": "+v)
 		}
-		return os.WriteFile(filePath, []byte(data), 0644)
+		return os.WriteFile(filePath, []byte(data), 0600)
 
 	default:
 		return errors.New("unsupported file type")

@@ -30,7 +30,7 @@ func TestLoadSettings_FileExists(t *testing.T) {
 		t.Fatalf("Failed to marshal test settings: %v", err)
 	}
 
-	err = os.WriteFile(settingsPath, data, 0644)
+	err = os.WriteFile(settingsPath, data, 0600)
 	if err != nil {
 		t.Fatalf("Failed to write test settings file: %v", err)
 	}
@@ -106,7 +106,7 @@ func TestSaveSettings(t *testing.T) {
 	}
 
 	// Verify file was created
-	if _, err := os.Stat(settingsPath); os.IsNotExist(err) {
+	if _, statErr := os.Stat(settingsPath); os.IsNotExist(statErr) {
 		t.Error("Settings file should have been created")
 	}
 
