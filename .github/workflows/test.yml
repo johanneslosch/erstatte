@@ -1,0 +1,156 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go-version: ["1.21", "1.22", "1.23"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go ${{ matrix.go-version }}
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Verify dependencies
+        run: go mod verify
+
+      - name: Run unit tests
+        run: go test -v ./tests/unit/...
+
+      - name: Run integration tests
+        run: go test -v ./tests/integration/...
+
+      - name: Run all tests with coverage
+        run: go test -v -coverprofile=coverage.out ./tests/...
+
+      - name: Generate coverage report
+        run: go tool cover -html=coverage.out -o coverage.html
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.out
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report-go-${{ matrix.go-version }}
+          path: |
+            coverage.out
+            coverage.html
+
+  benchmark:
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-1.23-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-1.23-
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run benchmarks
+        run: go test -bench=. -benchmem ./tests/benchmarks/... > benchmark_results.txt
+
+      - name: Upload benchmark results
+        uses: actions/upload-artifact@v3
+        with:
+          name: benchmark-results
+          path: benchmark_results.txt
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          # Windows on ARM64 is not yet well supported
+          - goos: windows
+            goarch: arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-1.23-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-1.23-
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p dist
+          if [ "$GOOS" = "windows" ]; then
+            go build -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.exe ./
+          else
+            go build -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }} ./
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: erstatte-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/

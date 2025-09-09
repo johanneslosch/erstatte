@@ -1,0 +1,114 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-1.23-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-1.23-
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          args: --timeout=5m
+
+      - name: Run go vet
+        run: go vet ./...
+
+      - name: Run go fmt check
+        run: |
+          if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+            echo "The following files are not formatted correctly:"
+            gofmt -s -l .
+            exit 1
+          fi
+
+      - name: Check for inefficient assignments
+        run: |
+          go install github.com/gordonklaus/ineffassign@latest
+          ineffassign ./...
+
+      - name: Check for misspellings
+        run: |
+          go install github.com/client9/misspell/cmd/misspell@latest
+          misspell -error .
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Run Gosec Security Scanner
+        uses: securecodewarrior/github-action-gosec@master
+        with:
+          args: "-fmt sarif -out gosec.sarif ./..."
+
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: gosec.sarif
+
+      - name: Run Nancy (dependency vulnerability scanner)
+        run: |
+          go install github.com/sonatypecommunity/nancy@latest
+          go list -json -deps ./... | nancy sleuth
+
+  dependency-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Check for outdated dependencies
+        run: |
+          go install github.com/psampaz/go-mod-outdated@latest
+          go mod download
+          go list -u -m -json all | go-mod-outdated -update -direct
+
+      - name: Check go mod tidy
+        run: |
+          go mod tidy
+          if [ ! -z "$(git status --porcelain)" ]; then
+            echo "go mod tidy made changes. Please run 'go mod tidy' and commit the changes."
+            git status --porcelain
+            exit 1
+          fi

@@ -1,0 +1,106 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+coverage.out
+
+# Go mod cache (when using go modules locally)
+go.sum.backup
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# Log files
+*.log
+logs/
+
+# Configuration files with sensitive data
+# Uncomment if your settings.json contains secrets
+# settings.json
+config.local.*
+
+# Build directories
+build/
+dist/
+bin/
+releases/
+
+# Built binaries (specific to your project)
+erstatte
+erstatte.exe
+mycli.exe
+
+# Temporary files
+*.tmp
+*.temp
+
+# Debug files
+debug
+*.pdb
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Coverage reports
+coverage.txt
+coverage.html
+coverage.xml
+coverage.out
+
+# Benchmark results
+*.bench
+benchmark_results.txt
+
+# Profile files
+*.prof
+*.mem
+*.cpu
+
+# Air live reload tool
+tmp/
+
+# GoReleaser artifacts
+goreleaser/
+
+# Security scan results
+gosec-report.json
+gosec-report.html
+
+# Test artifacts
+testdata/output/
+test_results/
+
+# Documentation build artifacts
+docs/_build/
+site/

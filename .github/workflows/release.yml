@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Run tests
+        run: go test -v ./tests/...
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, arm64]
+        exclude:
+          - goos: windows
+            goarch: arm64
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.23"
+
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p dist
+          if [ "$GOOS" = "windows" ]; then
+            go build -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.exe ./
+          else
+            go build -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }} ./
+          fi
+
+      - name: Package binaries
+        run: |
+          cd dist
+          for file in erstatte-*; do
+            if [[ $file == *.exe ]]; then
+              zip "${file%.exe}.zip" "$file"
+            else
+              tar -czf "${file}.tar.gz" "$file"
+            fi
+          done
+
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.{zip,tar.gz}
+          body: |
+            ## Changes in ${{ steps.get_version.outputs.VERSION }}
+
+            ### Features
+            - Add your features here
+
+            ### Bug Fixes
+            - Add your bug fixes here
+
+            ### Breaking Changes
+            - Add any breaking changes here
+
+            ## Installation
+
+            Download the appropriate binary for your platform from the assets below.
+
+            ### Linux/macOS
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-linux-amd64.tar.gz
+            tar -xzf erstatte-linux-amd64.tar.gz
+            chmod +x erstatte-linux-amd64
+            sudo mv erstatte-linux-amd64 /usr/local/bin/erstatte
+            ```
+
+            ### Windows
+            Download `erstatte-windows-amd64.zip` and extract the executable.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

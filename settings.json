@@ -1,0 +1,14 @@
+{
+  "boolean": [
+    {
+      "filePath": "./testfile.ts",
+      "field": "resetDatabase",
+      "value": "false"
+    },
+    {
+      "filePath": "./testfile.ts",
+      "field": "resetAsyncStorage",
+      "value": "false"
+    }
+  ]
+}
