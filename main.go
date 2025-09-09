@@ -7,6 +7,9 @@ import (
 	"github.com/johanneslosch/erstatte/pkg/settings"
 )
 
+// version is set via ldflags during build
+var version = "dev"
+
 func main() {
 	settingsData, err := settings.LoadSettings("settings.json")
 	if err != nil {

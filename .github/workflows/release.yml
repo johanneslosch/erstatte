@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: go test -v ./tests/...
 
-  release:
+  build:
     needs: test
     runs-on: ubuntu-latest
 
@@ -61,47 +61,91 @@ jobs:
             go build -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }} ./
           fi
 
-      - name: Package binaries
+      - name: Package binary
         run: |
           cd dist
-          for file in erstatte-*; do
-            if [[ $file == *.exe ]]; then
-              zip "${file%.exe}.zip" "$file"
-            else
-              tar -czf "${file}.tar.gz" "$file"
-            fi
-          done
+          if [ "${{ matrix.goos }}" = "windows" ]; then
+            zip erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.zip erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+          else
+            tar -czf erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz erstatte-${{ matrix.goos }}-${{ matrix.goarch }}
+          fi
 
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
         with:
-          files: dist/*.{zip,tar.gz}
+          name: binary-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            dist/*.zip
+            dist/*.tar.gz
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release_assets
+          find artifacts/ -name "*.zip" -o -name "*.tar.gz" | xargs -I {} cp {} release_assets/
+          ls -la release_assets/
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release_assets/*
           body: |
             ## Changes in ${{ steps.get_version.outputs.VERSION }}
 
             ### Features
-            - Add your features here
+            - Configuration file replacement tool for JSON, TypeScript, and Properties files
+            - Cross-platform support (Linux, Windows, macOS on amd64 and arm64)
+            - Type-aware replacements with intelligent handling of booleans, numbers, and strings
 
-            ### Bug Fixes
-            - Add your bug fixes here
-
-            ### Breaking Changes
-            - Add any breaking changes here
-
-            ## Installation
+            ### Installation
 
             Download the appropriate binary for your platform from the assets below.
 
-            ### Linux/macOS
+            #### Linux/macOS
             ```bash
+            # For Linux amd64
             wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-linux-amd64.tar.gz
             tar -xzf erstatte-linux-amd64.tar.gz
             chmod +x erstatte-linux-amd64
             sudo mv erstatte-linux-amd64 /usr/local/bin/erstatte
+
+            # For macOS amd64 (Intel)
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-darwin-amd64.tar.gz
+            tar -xzf erstatte-darwin-amd64.tar.gz
+            chmod +x erstatte-darwin-amd64
+            sudo mv erstatte-darwin-amd64 /usr/local/bin/erstatte
+
+            # For macOS arm64 (Apple Silicon)
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-darwin-arm64.tar.gz
+            tar -xzf erstatte-darwin-arm64.tar.gz
+            chmod +x erstatte-darwin-arm64
+            sudo mv erstatte-darwin-arm64 /usr/local/bin/erstatte
             ```
 
-            ### Windows
-            Download `erstatte-windows-amd64.zip` and extract the executable.
+            #### Windows
+            Download the appropriate `erstatte-windows-amd64.zip` file and extract the executable to a directory in your PATH.
+
+            ### Usage
+            1. Create a `settings.json` file in your project directory
+            2. Run `erstatte` to apply the configured replacements
+            
+            See the [README](https://github.com/${{ github.repository }}#usage) for detailed usage instructions and examples.
           draft: false
           prerelease: false
         env:
