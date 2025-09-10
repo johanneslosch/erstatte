@@ -24,17 +24,9 @@ jobs:
       - name: Run tests
         run: go test -v ./tests/...
 
-  release:
+  build:
     needs: test
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        goos: [linux, windows, darwin]
-        goarch: [amd64, arm64]
-        exclude:
-          - goos: windows
-            goarch: arm64
 
     steps:
       - name: Checkout code
@@ -49,17 +41,30 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
-      - name: Build binary
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
+      - name: Build binaries for all platforms
         run: |
           mkdir -p dist
-          if [ "$GOOS" = "windows" ]; then
-            go build -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }}.exe ./
-          else
-            go build -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" -o dist/erstatte-${{ matrix.goos }}-${{ matrix.goarch }} ./
-          fi
+
+          # Build for each platform
+          platforms=("linux/amd64" "linux/arm64" "darwin/amd64" "darwin/arm64" "windows/amd64")
+
+          for platform in "${platforms[@]}"; do
+            platform_split=(${platform//\// })
+            GOOS=${platform_split[0]}
+            GOARCH=${platform_split[1]}
+            
+            echo "Building for $GOOS/$GOARCH..."
+            
+            if [ "$GOOS" = "windows" ]; then
+              output_name="erstatte-$GOOS-$GOARCH.exe"
+            else
+              output_name="erstatte-$GOOS-$GOARCH"
+            fi
+            
+            env GOOS=$GOOS GOARCH=$GOARCH go build \
+              -ldflags "-X main.version=${{ steps.get_version.outputs.VERSION }}" \
+              -o "dist/$output_name" ./
+          done
 
       - name: Package binaries
         run: |
@@ -67,32 +72,32 @@ jobs:
           for file in erstatte-*; do
             if [[ $file == *.exe ]]; then
               zip "${file%.exe}.zip" "$file"
+              rm "$file"
             else
               tar -czf "${file}.tar.gz" "$file"
+              rm "$file"
             fi
           done
 
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*.{zip,tar.gz}
+          files: |
+            dist/*.zip
+            dist/*.tar.gz
           body: |
             ## Changes in ${{ steps.get_version.outputs.VERSION }}
 
             ### Features
-            - Add your features here
+            - Configuration file replacement tool for JSON, TypeScript, and Properties files
+            - Intelligent type handling for TypeScript files (boolean values without quotes, strings with quotes)
+            - Cross-platform support for Linux, Windows, and macOS
 
-            ### Bug Fixes
-            - Add your bug fixes here
-
-            ### Breaking Changes
-            - Add any breaking changes here
-
-            ## Installation
+            ### Installation
 
             Download the appropriate binary for your platform from the assets below.
 
-            ### Linux/macOS
+            #### Linux (x64)
             ```bash
             wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-linux-amd64.tar.gz
             tar -xzf erstatte-linux-amd64.tar.gz
@@ -100,8 +105,38 @@ jobs:
             sudo mv erstatte-linux-amd64 /usr/local/bin/erstatte
             ```
 
-            ### Windows
-            Download `erstatte-windows-amd64.zip` and extract the executable.
+            #### Linux (ARM64)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-linux-arm64.tar.gz
+            tar -xzf erstatte-linux-arm64.tar.gz
+            chmod +x erstatte-linux-arm64
+            sudo mv erstatte-linux-arm64 /usr/local/bin/erstatte
+            ```
+
+            #### macOS (Intel)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-darwin-amd64.tar.gz
+            tar -xzf erstatte-darwin-amd64.tar.gz
+            chmod +x erstatte-darwin-amd64
+            sudo mv erstatte-darwin-amd64 /usr/local/bin/erstatte
+            ```
+
+            #### macOS (Apple Silicon)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.get_version.outputs.VERSION }}/erstatte-darwin-arm64.tar.gz
+            tar -xzf erstatte-darwin-arm64.tar.gz
+            chmod +x erstatte-darwin-arm64
+            sudo mv erstatte-darwin-arm64 /usr/local/bin/erstatte
+            ```
+
+            #### Windows (x64)
+            Download `erstatte-windows-amd64.zip` and extract the executable to a directory in your PATH.
+
+            ### Usage
+            1. Create a `settings.json` file in your project directory
+            2. Run `erstatte` to apply the configuration replacements
+
+            See the [README](https://github.com/${{ github.repository }}) for detailed usage instructions and examples.
           draft: false
           prerelease: false
         env:
