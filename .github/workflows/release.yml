@@ -133,7 +133,7 @@ jobs:
             Download `erstatte-windows-amd64.zip` and extract the executable to a directory in your PATH.
 
             ### Usage
-            1. Create a `settings.json` file in your project directory
+            1. Create a `erstatte.json` file in your project directory
             2. Run `erstatte` to apply the configuration replacements
 
             See the [README](https://github.com/${{ github.repository }}) for detailed usage instructions and examples.

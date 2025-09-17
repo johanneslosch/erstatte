@@ -11,7 +11,7 @@ import (
 var version = "development"
 
 func main() {
-	settingsData, err := settings.LoadSettings("settings.json")
+	settingsData, err := settings.LoadSettings("erstatte.json")
 	if err != nil {
 		panic(err)
 	}

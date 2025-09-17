@@ -44,8 +44,8 @@ Desktop.ini
 logs/
 
 # Configuration files with sensitive data
-# Uncomment if your settings.json contains secrets
-# settings.json
+# Uncomment if your erstatte.json contains secrets
+# erstatte.json
 config.local.*
 
 # Build directories

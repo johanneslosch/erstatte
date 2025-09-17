@@ -28,7 +28,7 @@ func TestEndToEndWorkflow(t *testing.T) {
 	}
 
 	// Create settings
-	settingsFile := filepath.Join(tempDir, "test_settings.json")
+	settingsFile := filepath.Join(tempDir, "test_erstatte.json")
 	testSettings := settings.Settings{
 		Boolean: []settings.BooleanSetting{
 			{

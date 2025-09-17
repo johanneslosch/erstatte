@@ -82,7 +82,7 @@ func BenchmarkParseAndReplace_TypeScript(b *testing.B) {
 
 func BenchmarkLoadSettings(b *testing.B) {
 	tempDir := b.TempDir()
-	settingsFile := filepath.Join(tempDir, "benchmark_settings.json")
+	settingsFile := filepath.Join(tempDir, "benchmark_erstatte.json")
 
 	testSettings := settings.Settings{
 		Boolean: []settings.BooleanSetting{
@@ -121,7 +121,7 @@ func BenchmarkSaveSettings(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		settingsFile := filepath.Join(tempDir, "benchmark_save_settings.json")
+		settingsFile := filepath.Join(tempDir, "benchmark_save_erstatte.json")
 		err := settings.SaveSettings(settingsFile, testSettings)
 		if err != nil {
 			b.Fatalf("SaveSettings failed: %v", err)

@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release of erstatte configuration replacement tool
 - Support for JSON, TypeScript, and Properties file formats
-- Configuration-driven replacement via settings.json
+- Configuration-driven replacement via erstatte.json
 - Cross-platform binary builds (Linux, Windows, macOS)
 - Comprehensive test suite with 76.7% coverage
 - GitHub Actions CI/CD pipeline

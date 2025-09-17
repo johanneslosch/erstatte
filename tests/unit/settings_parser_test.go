@@ -13,7 +13,7 @@ import (
 func TestLoadSettings_FileExists(t *testing.T) {
 	// Create a temporary settings file
 	tempDir := t.TempDir()
-	settingsPath := filepath.Join(tempDir, "test_settings.json")
+	settingsPath := filepath.Join(tempDir, "test_erstatte.json")
 
 	expectedSettings := settings.Settings{
 		Boolean: []settings.BooleanSetting{

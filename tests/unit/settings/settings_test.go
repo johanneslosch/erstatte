@@ -12,7 +12,7 @@ import (
 func TestLoadSettings_FileExists(t *testing.T) {
 	// Create a temporary settings file
 	tempDir := t.TempDir()
-	settingsPath := filepath.Join(tempDir, "test_settings.json")
+	settingsPath := filepath.Join(tempDir, "test_erstatte.json")
 
 	expectedSettings := settings.Settings{
 		Boolean: []settings.BooleanSetting{
@@ -61,7 +61,7 @@ func TestLoadSettings_FileExists(t *testing.T) {
 
 func TestLoadSettings_FileDoesNotExist(t *testing.T) {
 	tempDir := t.TempDir()
-	settingsPath := filepath.Join(tempDir, "nonexistent_settings.json")
+	settingsPath := filepath.Join(tempDir, "nonexistent_erstatte.json")
 
 	// Test loading non-existent settings file
 	loadedSettings, err := settings.LoadSettings(settingsPath)
@@ -82,7 +82,7 @@ func TestLoadSettings_FileDoesNotExist(t *testing.T) {
 
 func TestSaveSettings(t *testing.T) {
 	tempDir := t.TempDir()
-	settingsPath := filepath.Join(tempDir, "save_test_settings.json")
+	settingsPath := filepath.Join(tempDir, "save_test_erstatte.json")
 
 	testSettings := settings.Settings{
 		Boolean: []settings.BooleanSetting{

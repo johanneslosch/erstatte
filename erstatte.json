@@ -1,0 +1,9 @@
+{
+  "boolean": [
+    {
+      "filePath": "string",
+      "field": "string",
+      "value": "string"
+    }
+  ]
+}

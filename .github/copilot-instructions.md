@@ -73,8 +73,8 @@ export const config = {
 };
 EOF
 
-# Create settings.json
-cat > settings.json << 'EOF'
+# Create erstatte.json
+cat > erstatte.json << 'EOF'
 {
   "boolean": [
     {
@@ -113,7 +113,7 @@ cat > config.json << 'EOF'
 EOF
 
 # Update settings.json for JSON test
-cat > settings.json << 'EOF'
+cat > erstatte.json << 'EOF'
 {
   "boolean": [
     {
@@ -156,10 +156,10 @@ make test && make build
 ```
 
 ### Key Files
-- `main.go` - Application entry point (loads settings.json, processes replacements)
+- `main.go` - Application entry point (loads erstatte.json, processes replacements)
 - `Makefile` - Unix build commands (test, build, coverage, cross-compilation)
 - `.golangci.yml` - Linting configuration (has compatibility issues with Go 1.24.7)
-- `settings.json` - Default configuration file (created by user)
+- `erstatte.json` - Default configuration file (created by user)
 
 ### Supported File Types
 - **JSON files (`.json`)** - Replaces values as strings
@@ -182,10 +182,10 @@ make test && make build
 4. Follow existing code patterns in `/pkg/settings/` and `/pkg/parser/`
 
 ### Debugging Issues
-- Test files are in `/examples/` directory (testfile.ts, example-settings.json)  
+- Test files are in `/examples/` directory (testfile.ts, example-erstatte.json)  
 - Integration tests in `/tests/integration/` show complete workflows
 - Use `go run ./` for quick testing during development
-- Settings file must be named `settings.json` in current directory
+- Settings file must be named `erstatte.json` in current directory
 
 ## CI/CD and GitHub Actions
 
@@ -214,13 +214,13 @@ make build-all          # NEVER CANCEL: 32 seconds, set 60+ second timeout
 
 ### Common Issues
 - **golangci-lint fails**: Version compatibility issue with Go 1.24.7 - use `go vet` and `go fmt` instead
-- **No settings.json**: Application requires `settings.json` in current directory
-- **File not found**: Ensure file paths in settings.json are relative to execution directory
+- **No settings.json**: Application requires `erstatte.json` in current directory
+- **File not found**: Ensure file paths in erstatte.json are relative to execution directory
 - **Cross-compilation slow**: Normal behavior - 32 seconds for 5 platform builds
 
 ### Validation Failures
 If manual testing fails:
-1. Check settings.json format matches examples
+1. Check erstatte.json format matches examples
 2. Verify file paths are correct relative to execution directory  
 3. Test with known-good examples from `/examples/` directory
 4. Check file permissions and write access
