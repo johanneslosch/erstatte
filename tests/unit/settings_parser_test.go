@@ -16,7 +16,7 @@ func TestLoadSettings_FileExists(t *testing.T) {
 	settingsPath := filepath.Join(tempDir, "test_erstatte.json")
 
 	expectedSettings := settings.Settings{
-		Boolean: []settings.BooleanSetting{
+		Boolean: []settings.InternalSetting{
 			{
 				FilePath: "./test.ts",
 				Field:    "testField",

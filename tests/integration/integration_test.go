@@ -30,7 +30,7 @@ func TestEndToEndWorkflow(t *testing.T) {
 	// Create settings
 	settingsFile := filepath.Join(tempDir, "test_erstatte.json")
 	testSettings := settings.Settings{
-		Boolean: []settings.BooleanSetting{
+		Boolean: []settings.InternalSetting{
 			{
 				FilePath: testTSFile,
 				Field:    "debugMode",
@@ -132,7 +132,7 @@ server.host=localhost`
 
 	// Create settings for all files
 	testSettings := settings.Settings{
-		Boolean: []settings.BooleanSetting{
+		Boolean: []settings.InternalSetting{
 			{FilePath: jsonFile, Field: "debug", Value: "true"},
 			{FilePath: tsFile, Field: "production", Value: "true"},
 			{FilePath: tsFile, Field: "apiUrl", Value: "api.production.com"},

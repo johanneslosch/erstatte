@@ -5,19 +5,20 @@ import (
 	"os"
 )
 
-type BooleanSetting struct {
+type InternalSetting struct {
 	FilePath string `json:"filePath"`
 	Field    string `json:"field"`
 	Value    string `json:"value"`
 }
 
 type Settings struct {
-	Boolean []BooleanSetting `json:"boolean"`
+	Boolean []InternalSetting `json:"boolean"`
+	String  []InternalSetting   `json:"string"`
 }
 
 func DefaultSettings() Settings {
 	return Settings{
-		Boolean: []BooleanSetting{
+		Boolean: []InternalSetting{
 			{
 				FilePath: "string",
 				Field:    "string",

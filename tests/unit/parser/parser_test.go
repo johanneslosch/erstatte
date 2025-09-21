@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/johanneslosch/erstatte/pkg/parser"
+	"github.com/johanneslosch/erstatte/pkg/settings"
 )
 
 func TestParseAndReplace_JSON(t *testing.T) {

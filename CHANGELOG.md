@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Technical Details
+
+- changed BooleanSetting to InternalSetting in the whole codebase 
+
 ## [1.0.1] - 2025-09-10
 
 ### Added

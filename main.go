@@ -16,7 +16,7 @@ func main() {
 		panic(err)
 	}
 
-	// Process each BooleanSetting with the parser
+	// Process each InternalSetting with the parser
 	for _, s := range settingsData.Boolean {
 		replacements := map[string]string{s.Field: s.Value}
 		err := parser.ParseAndReplace(s.FilePath, replacements)

@@ -85,7 +85,7 @@ func BenchmarkLoadSettings(b *testing.B) {
 	settingsFile := filepath.Join(tempDir, "benchmark_erstatte.json")
 
 	testSettings := settings.Settings{
-		Boolean: []settings.BooleanSetting{
+		Boolean: []settings.InternalSetting{
 			{FilePath: "./file1.ts", Field: "field1", Value: "true"},
 			{FilePath: "./file2.ts", Field: "field2", Value: "false"},
 			{FilePath: "./file3.json", Field: "field3", Value: "true"},
@@ -111,7 +111,7 @@ func BenchmarkSaveSettings(b *testing.B) {
 	tempDir := b.TempDir()
 
 	testSettings := settings.Settings{
-		Boolean: []settings.BooleanSetting{
+		Boolean: []settings.InternalSetting{
 			{FilePath: "./file1.ts", Field: "field1", Value: "true"},
 			{FilePath: "./file2.ts", Field: "field2", Value: "false"},
 			{FilePath: "./file3.json", Field: "field3", Value: "true"},
