@@ -10,5 +10,12 @@
       "field": "resetAsyncStorage",
       "value": "false"
     }
+  ],
+  "string": [
+    {
+      "filePath": "./testfile.ts",
+      "environment": "environment",
+      "value": "production"
+    }
   ]
 }

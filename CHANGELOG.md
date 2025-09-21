@@ -7,9 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Tests for string replacements across supported formats (JSON, TypeScript, Properties).
+
+### Changed
+
+- Renamed `BooleanSetting` to `InternalSetting` across the codebase.
+
 ### Technical Details
 
-- changed BooleanSetting to InternalSetting in the whole codebase 
+- End-to-end `erstatte.json` workflow test for string replacements.
 
 ## [1.0.1] - 2025-09-10
 
