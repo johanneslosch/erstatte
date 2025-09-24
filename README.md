@@ -170,8 +170,7 @@ erstatte/
 │   ├── testfile.ts              # Example TypeScript file
 │   └── README.md                # Examples documentation
 ├── .github/workflows/            # GitHub Actions CI/CD
-├── main.go                       # Main application
-└── build-simple.ps1             # Build script for Windows
+└── main.go                       # Main application
 ```
 
 ## 🧪 Development
@@ -180,6 +179,8 @@ erstatte/
 
 - Go 1.21 or later
 - Make (optional, for using Makefile)
+  - **Windows**: Install via `winget install GnuWin32.Make`
+  - **Linux/macOS**: Usually pre-installed or available via package manager
 
 ### Running Tests
 
@@ -200,15 +201,7 @@ go tool cover -html=coverage.out -o coverage.html
 
 ### Using Build Scripts
 
-#### Windows (PowerShell)
-
-```powershell
-.\build-simple.ps1 test    # Run tests
-.\build-simple.ps1 build   # Build binary
-.\build-simple.ps1 help    # Show all commands
-```
-
-#### Unix (Make)
+#### All Platforms (Make)
 
 ```bash
 make test          # Run tests

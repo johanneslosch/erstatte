@@ -12,10 +12,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests for string replacements across supported formats (JSON, TypeScript, Properties).
 - `codecov.yml` configuration file for proper code coverage reporting.
 - Coverage file verification step in CI pipeline for debugging.
+- Windows Make installation guidance via `winget install GnuWin32.Make`.
 
 ### Changed
 
 - Renamed `BooleanSetting` to `InternalSetting` across the codebase.
+- Unified build system to use Makefile across all platforms instead of separate PowerShell scripts.
+
+### Removed
+
+- `build.ps1` and `build-simple.ps1` PowerShell build scripts.
+- Platform-specific build script references from documentation.
 
 ### Fixed
 

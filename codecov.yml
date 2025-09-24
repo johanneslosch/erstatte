@@ -44,4 +44,3 @@ ignore:
   - "*.yml"
   - "*.yaml"
   - "Makefile"
-  - "build-simple.ps1"
