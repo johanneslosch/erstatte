@@ -190,8 +190,8 @@ func TestEndToEnd_ReplaceViaErstatteJSON(t *testing.T) {
 		t.Fatalf("Failed to write properties file: %v", err)
 	}
 
-		// create erstatte.json settings that point to the properties file
-		settingsPath := filepath.Join(tempDir, "erstatte.json")
+	// create erstatte.json settings that point to the properties file
+	settingsPath := filepath.Join(tempDir, "erstatte.json")
 
 	// Use the settings struct and helper to write a valid JSON file (handles escaping)
 	settingsObj := settings.Settings{
@@ -204,9 +204,9 @@ func TestEndToEnd_ReplaceViaErstatteJSON(t *testing.T) {
 		},
 	}
 
-		if err := settings.SaveSettings(settingsPath, settingsObj); err != nil {
-				t.Fatalf("Failed to write erstatte.json: %v", err)
-		}
+	if err := settings.SaveSettings(settingsPath, settingsObj); err != nil {
+		t.Fatalf("Failed to write erstatte.json: %v", err)
+	}
 
 	// Load settings from the settings file and process them like main
 	loaded, err := settings.LoadSettings(settingsPath)

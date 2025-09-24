@@ -10,14 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Tests for string replacements across supported formats (JSON, TypeScript, Properties).
+- `codecov.yml` configuration file for proper code coverage reporting.
+- Coverage file verification step in CI pipeline for debugging.
 
 ### Changed
 
 - Renamed `BooleanSetting` to `InternalSetting` across the codebase.
 
+### Fixed
+
+- Codecov integration issues in GitHub Actions workflow.
+- Updated codecov action from `file:` to `files:` parameter (v4 compatibility).
+- Added verbose logging to codecov upload for better debugging.
+
 ### Technical Details
 
 - End-to-end `erstatte.json` workflow test for string replacements.
+- Enhanced CI pipeline with coverage file existence verification.
+- Configured codecov with 70% coverage target and proper ignore patterns.
 
 ## [1.0.1] - 2025-09-10
 

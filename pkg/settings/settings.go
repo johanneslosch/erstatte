@@ -13,7 +13,7 @@ type InternalSetting struct {
 
 type Settings struct {
 	Boolean []InternalSetting `json:"boolean"`
-	String  []InternalSetting   `json:"string"`
+	String  []InternalSetting `json:"string"`
 }
 
 func DefaultSettings() Settings {
