@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `codecov.yml` configuration file for proper code coverage reporting.
 - Coverage file verification step in CI pipeline for debugging.
 - Windows Make installation guidance via `winget install GnuWin32.Make`.
+- Main application was only processing Boolean settings, String settings from erstatte.json are supported now
+- Integration test for String settings were applied during test execution.
 
 ### Changed
 

@@ -26,4 +26,14 @@ func main() {
 			fmt.Printf("%s: %s = %s replaced\n", s.FilePath, s.Field, s.Value)
 		}
 	}
+
+	for _, s := range settingsData.String {
+		replacements := map[string]string{s.Field: s.Value}
+		err := parser.ParseAndReplace(s.FilePath, replacements)
+		if err != nil {
+			fmt.Printf("Error replacing in %s: %v\n", s.FilePath, err)
+		} else {
+			fmt.Printf("%s: %s = %s replaced\n", s.FilePath, s.Field, s.Value)
+		}
+	}
 }

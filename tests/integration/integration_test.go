@@ -41,6 +41,8 @@ func TestEndToEndWorkflow(t *testing.T) {
 				Field:    "enableFeature",
 				Value:    "false",
 			},
+		},
+		String: []settings.InternalSetting{
 			{
 				FilePath: testTSFile,
 				Field:    "serverUrl",
@@ -62,6 +64,13 @@ func TestEndToEndWorkflow(t *testing.T) {
 
 	// Apply each setting
 	for _, s := range loadedSettings.Boolean {
+		replacements := map[string]string{s.Field: s.Value}
+		if parseErr := parser.ParseAndReplace(s.FilePath, replacements); parseErr != nil {
+			t.Errorf("Failed to apply setting %s: %v", s.Field, parseErr)
+		}
+	}
+	
+	for _, s := range loadedSettings.String {
 		replacements := map[string]string{s.Field: s.Value}
 		if parseErr := parser.ParseAndReplace(s.FilePath, replacements); parseErr != nil {
 			t.Errorf("Failed to apply setting %s: %v", s.Field, parseErr)
